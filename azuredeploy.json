@@ -24,7 +24,8 @@
       }
     },
     "gridTopicTags": {
-      "type": "Object"
+      "type": "Object",
+      "value": {}
     },
     "gridTopicIdentity": {
       "type": "Object",
