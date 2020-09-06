@@ -2,33 +2,145 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01-preview/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "name": {
-      "type": "String"
+    "gridTopicName": {
+      "type": "String",
+      "metadata": {
+        "description": "The name of the event grid topic that you wish to create."
+      }
     },
-    "location": {
-      "type": "String"
+    "gridTopicLocation": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for event grid topic resources."
+      }
     },
-    "inputSchema": {
-      "type": "String"
+    "gridTopicInputSchema": {
+      "type": "String",
+      "defaultValue": "EventGridSchema",
+      "value": "EventGridSchema",
+      "metadata": {
+        "description": "The input schema you wish to choose."
+      }
     },
-    "tags": {
+    "gridTopicTags": {
       "type": "Object"
     },
-    "identity": {
-      "type": "Object"
+    "gridTopicIdentity": {
+      "type": "Object",
+      "defaultValue": {
+        "type": "SystemAssigned"
+      },
+      "value": {
+        "type": "SystemAssigned"
+      },
+      "metadata": {
+        "description": "The identity that you wish to choose."
+      }
+    },
+    "siteLocation": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for web app service resources."
+      }
+    },
+    "siteName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the web app that you wish to create."
+      }
+    },
+    "hostingPlanName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the App Service plan to use for hosting the web app."
+      }
+    },
+    "siteSku": {
+      "type": "string",
+      "allowedValues": [
+        "F1",
+        "D1",
+        "B1",
+        "B2",
+        "B3",
+        "S1"
+      ],
+      "defaultValue": "F1",
+      "metadata": {
+        "description": "The pricing tier for the hosting plan."
+      }
+    },
+    "repoURL": {
+      "type": "string",
+      "defaultValue": "https://github.com/sarthakvijayvergiya/azDevopsAuditing.git",
+      "metadata": {
+        "description": "The URL for the GitHub repository that contains the project to deploy."
+      }
+    },
+    "branch": {
+      "type": "string",
+      "defaultValue": "master",
+      "metadata": {
+        "description": "The branch of the GitHub repository to use."
+      }
     }
   },
   "resources": [
     {
       "type": "Microsoft.EventGrid/topics",
       "apiVersion": "2020-04-01-preview",
-      "name": "[parameters('name')]",
-      "location": "[parameters('location')]",
-      "tags": "[parameters('tags')]",
-      "identity": "[parameters('identity')]",
+      "name": "[parameters('gridTopicName')]",
+      "location": "[parameters('gridTopicLocation')]",
+      "tags": "[parameters('gridTopicTags')]",
+      "identity": "[parameters('gridTopicIdentity')]",
       "properties": {
-        "inputSchema": "[parameters('inputSchema')]"
+        "inputSchema": "[parameters('gridTopicInputSchema')]"
       }
+    },
+    {
+      "apiVersion": "2018-11-01",
+      "name": "[parameters('hostingPlanName')]",
+      "type": "Microsoft.Web/serverfarms",
+      "location": "[parameters('siteLocation')]",
+      "sku": {
+        "name": "[parameters('sku')]",
+        "capacity": "0"
+      },
+      "properties": {
+        "name": "[parameters('hostingPlanName')]"
+      }
+    },
+    {
+      "apiVersion": "2018-11-01",
+      "name": "[parameters('siteName')]",
+      "type": "Microsoft.Web/sites",
+      "location": "[parameters('siteLocation')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
+      ],
+      "properties": {
+        "serverFarmId": "[parameters('hostingPlanName')]",
+        "siteConfig": {
+          "webSocketsEnabled": true
+        }
+      },
+      "resources": [
+        {
+          "apiVersion": "2018-11-01",
+          "name": "web",
+          "type": "sourcecontrols",
+          "dependsOn": [
+            "[resourceId('Microsoft.Web/Sites', parameters('siteName'))]"
+          ],
+          "properties": {
+            "RepoUrl": "[parameters('repoURL')]",
+            "branch": "[parameters('branch')]",
+            "IsManualIntegration": true
+          }
+        }
+      ]
     }
   ]
 }
