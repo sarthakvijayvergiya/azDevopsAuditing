@@ -18,21 +18,17 @@
     "gridTopicInputSchema": {
       "type": "String",
       "defaultValue": "EventGridSchema",
-      "value": "EventGridSchema",
       "metadata": {
         "description": "The input schema you wish to choose."
       }
     },
     "gridTopicTags": {
       "type": "Object",
-      "value": {}
+      "defaultValue": {}
     },
     "gridTopicIdentity": {
       "type": "Object",
       "defaultValue": {
-        "type": "SystemAssigned"
-      },
-      "value": {
         "type": "SystemAssigned"
       },
       "metadata": {
@@ -52,7 +48,7 @@
         "description": "The name of the web app that you wish to create."
       }
     },
-    "hostingPlanName": {
+    "appServicePlanName": {
       "type": "string",
       "metadata": {
         "description": "The name of the App Service plan to use for hosting the web app."
@@ -102,15 +98,15 @@
     },
     {
       "apiVersion": "2018-11-01",
-      "name": "[parameters('hostingPlanName')]",
+      "name": "[parameters('appServicePlanName')]",
       "type": "Microsoft.Web/serverfarms",
       "location": "[parameters('siteLocation')]",
       "sku": {
-        "name": "[parameters('sku')]",
+        "name": "[parameters('siteSku')]",
         "capacity": "0"
       },
       "properties": {
-        "name": "[parameters('hostingPlanName')]"
+        "name": "[parameters('appServicePlanName')]"
       }
     },
     {
@@ -119,10 +115,10 @@
       "type": "Microsoft.Web/sites",
       "location": "[parameters('siteLocation')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms', parameters('hostingPlanName'))]"
+        "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]"
       ],
       "properties": {
-        "serverFarmId": "[parameters('hostingPlanName')]",
+        "serverFarmId": "[parameters('appServicePlanName')]",
         "siteConfig": {
           "webSocketsEnabled": true
         }
