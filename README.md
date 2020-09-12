@@ -2,4 +2,6 @@
 
 ### 1. Select Deploy to Azure
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fsarthakvijayvergiya%2FazDevopsAuditing%2Fmaster%2Fazuredeploy.json" target="_blank">Deploy to Azure</a>
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fsarthakvijayvergiya%2FazDevopsAuditing%2Fmaster%2Fazuredeploy.json" target="_blank">Deploy to Azure
+<img src="https://aka.ms/deploytoazurebutton"/>
+</a>
