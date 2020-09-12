@@ -1,3 +1,4 @@
+using AzDevOpsAuditingViewer.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -55,6 +56,7 @@ namespace AzDevOpsAuditingViewer
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<GridEventsHub>("/hubs/gridevents");
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
