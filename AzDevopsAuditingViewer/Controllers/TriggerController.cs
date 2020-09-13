@@ -14,7 +14,7 @@ using Newtonsoft.Json.Linq;
 namespace AzDevOpsAuditingViewer.Controllers
 {
     [Route("api/[controller]")]
-    public class UpdatesController : Controller
+    public class TriggerController : Controller
     {
         private bool EventTypeSubcriptionValidation
             => HttpContext.Request.Headers["aeg-event-type"].FirstOrDefault() ==
@@ -26,7 +26,7 @@ namespace AzDevOpsAuditingViewer.Controllers
 
         private readonly IHubContext<GridEventsHub> _hubContext;
 
-        public UpdatesController(IHubContext<GridEventsHub> gridEventsHubContext)
+        public TriggerController(IHubContext<GridEventsHub> gridEventsHubContext)
         {
             this._hubContext = gridEventsHubContext;
         }
